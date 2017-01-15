@@ -20,11 +20,15 @@ var Class = (function (Object) {'use strict';
       get: function () {
         var
           Super = function () {
-            var constructor = self.constructor, result, tmp;
-            sPO(self, gPO(proto));
-            tmp = self.constructor;
+            var
+              constructor = self.constructor,
+              parent = gPO(proto),
+              result
+            ;
+            sPO(self, parent);
+            while ((parent.constructor === constructor)) parent = gPO(parent);
             self.constructor = constructor;
-            try { result = tmp.apply(self, arguments); }
+            try { result = parent.constructor.apply(self, arguments); }
             finally { sPO(self, proto); }
             delete self.constructor;
             return result ? sPO(result, proto) : self;

@@ -1,5 +1,5 @@
 const console = require('consolemd');
-const Class = require('./classtrophobic-es5.min');
+const Class = require('./classtrophobic-es5');
 let obj;
 
 console.log('# Classtrophobic Test');
