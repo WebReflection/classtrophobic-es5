@@ -8,8 +8,147 @@
     my-div { cursor: pointer; }
     my-element, my-div, button[is=my-button] { margin: 8px; }
     </style>
-    <script defer src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/1.3.0/document-register-element.js"></script>
-    <script>var Class=function(a){'use strict';/*! (C) 2017 Andrea Giammarchi - MIT Style License */var b=['constructor','extends','static'],c=a.prototype,d=a.getPrototypeOf||function(l){return l.__proto__},e=a.setPrototypeOf||function(l,m){return l.__proto__=m,l},f=a.getOwnPropertyDescriptor,g=a.getOwnPropertySymbols?function(m){return a.getOwnPropertySymbols(m).concat(a.getOwnPropertyNames(m))}:a.getOwnPropertyNames,h=a.defineProperty,i=a.defineProperties,j={get:function(){var l=function(){var r;e(m,d(n));try{r=m.constructor.apply(m,arguments)}finally{e(m,n)}return r?e(r,n):m},m=this,n=d(m),q=n;if(n){e(l,n);do g(q).forEach(function(r){if(!l.hasOwnProperty(r)){var s=f(q,r),t=s.value;'function'==typeof t&&(s.value=function(){var w,x=n;do x=d(x);while(t===x[r]);try{w=x[r].apply(e(m,x),arguments)}finally{e(m,n)}return w},h(l,r,s))}});while((q=d(q))&&q!==c)}return l}},k={get:function(){var l={},m=this,n=m;do g(n).forEach(function(q){var r=f(n,q),s=r.value;'function'==typeof s&&(r.value=function(){for(var v,t=d(m),u=m[q],w=t;u===w[q];)w=d(w);m.method=w[q];try{v=m.method.apply(e(m,d(w)),arguments)}finally{e(m,t).method=u}return v},h(l,q,r))});while((n=d(n))&&n!==Function);return l}};return function(m){var n=m.constructor,q=m['static'],r=m['extends'],s=m.hasOwnProperty('constructor')?function(){return n.apply(this,arguments)||this}:r?function(){var v=r.apply(this,arguments);return v?e(v,s.prototype):this}:function(){},t={'super':k},u={'super':j};return r&&(e(s,r),e(s.prototype,r.prototype)),g(m).forEach(function(v){0>b.indexOf(v)&&(u[v]=f(m,v),u[v].enumerable=!1)}),i(s.prototype,u),q&&g(q).forEach(function(v){t[v]=f(q,v),t[v].enumerable=!1}),i(s,t)}}(Object);try{module.exports=Class}catch(a){}
+    <script defer src="//cdnjs.cloudflare.com/ajax/libs/document-register-element/1.3.0/document-register-element.max.js"></script>
+    <script>
+    var Class = (function (Object) {'use strict';
+  /*! (C) 2017 Andrea Giammarchi - MIT Style License */
+  var
+    reserved = ['constructor', 'extends', 'static'],
+    ObjectProto = Object.prototype,
+    gPO = Object.getPrototypeOf ||
+          function (o) { return o.__proto__; },
+    sPO = Object.setPrototypeOf ||
+          function (o, p) { o.__proto__ = p; return o; },
+    gOPD = Object.getOwnPropertyDescriptor,
+    ownKeys = Object.getOwnPropertySymbols ?
+          function ownKeys(o) {
+            return Object.getOwnPropertySymbols(o)
+                   .concat(Object.getOwnPropertyNames(o));
+          } :
+          Object.getOwnPropertyNames,
+    defineProperty = Object.defineProperty,
+    defProps = Object.defineProperties,
+    superPropertyDescriptor = {
+      get: function () {
+        var
+          Super = function () {
+            var constructor = self.constructor, result, tmp;
+            sPO(self, gPO(proto));
+            tmp = self.constructor;
+            self.constructor = constructor;
+            try { result = tmp.apply(self, arguments); }
+            finally { sPO(self, proto); }
+            delete self.constructor;
+            return result ? sPO(result, proto) : self;
+          },
+          self = this,
+          proto = gPO(self),
+          parent = proto,
+          call = Super.call,
+          apply = Super.apply
+        ;
+        if (proto) {
+          sPO(Super, proto);
+          Super.call = call;
+          Super.apply = apply;
+          do {
+            ownKeys(parent).forEach(function (prop) {
+              if (Super.hasOwnProperty(prop)) return;
+              var
+                descriptor = gOPD(parent, prop),
+                method = descriptor.value
+              ;
+              if (typeof method === 'function') {
+                descriptor.value = function () {
+                  var result, parent = proto;
+                  do { parent = gPO(parent); }
+                  while ((method === parent[prop]));
+                  try { result = parent[prop].apply(sPO(self, parent), arguments); }
+                  finally { sPO(self, proto); }
+                  return result;
+                };
+                defineProperty(Super, prop, descriptor);
+              }
+            });
+          } while ((parent = gPO(parent)) && parent !== ObjectProto);
+        }
+        return Super;
+      }
+    },
+    superStaticDescriptor = {
+      get: function () {
+        var Super = {}, self = this, parent = self;
+        do {
+          ownKeys(parent).forEach(function (prop) {
+            var
+              descriptor = gOPD(parent, prop),
+              method = descriptor.value
+            ;
+            if (typeof method === 'function') {
+              descriptor.value = function () {
+                var
+                  proto = gPO(self), method = self[prop],
+                  result, parent = proto
+                ;
+                while ((method === parent[prop])) parent = gPO(parent);
+                self.method = parent[prop];
+                try { result = self.method.apply(sPO(self, gPO(parent)), arguments); }
+                finally { sPO(self, proto).method = method; }
+                return result;
+              };
+              defineProperty(Super, prop, descriptor);
+            }
+          });
+        } while((parent = gPO(parent)) && parent !== Function);
+        return Super;
+      }
+    }
+  ;
+  return function Classtrophobic(definition) {
+    var
+      Constructor = definition.constructor,
+      Statics = definition['static'],
+      Super = definition['extends'],
+      Class = definition.hasOwnProperty('constructor') ?
+        function () {
+          return Constructor.apply(this, arguments) || this;
+        } :
+        (Super ?
+          function () {
+            var result = Super.apply(this, arguments);
+            return result ? sPO(result, Class.prototype) : this;
+          } :
+          function () {}
+        ),
+      Static = {
+        'super': superStaticDescriptor
+      },
+      Prototype = {
+        'super': superPropertyDescriptor
+      }
+    ;
+    if (Super) {
+      sPO(Class, Super);
+      sPO(Class.prototype, Super.prototype);
+    }
+    ownKeys(definition)
+      .forEach(function (key) {
+        if (reserved.indexOf(key) < 0) {
+          Prototype[key] = gOPD(definition, key);
+          Prototype[key].enumerable = false;
+        }
+      });
+    defProps(Class.prototype, Prototype);
+    if (Statics) ownKeys(Statics).forEach(function (key) {
+      Static[key] = gOPD(Statics, key);
+      Static[key].enumerable = false;
+    });
+    Class.prototype.constructor = Class;
+    return defProps(Class, Static);
+  };
+})(Object);
+try { module.exports = Class; } catch(o_O) {}
+
 
 
     this.onload = function () {

@@ -20,18 +20,25 @@ var Class = (function (Object) {'use strict';
       get: function () {
         var
           Super = function () {
-            var result;
+            var constructor = self.constructor, result, tmp;
             sPO(self, gPO(proto));
-            try { result = self.constructor.apply(self, arguments); }
+            tmp = self.constructor;
+            self.constructor = constructor;
+            try { result = tmp.apply(self, arguments); }
             finally { sPO(self, proto); }
+            delete self.constructor;
             return result ? sPO(result, proto) : self;
           },
           self = this,
           proto = gPO(self),
-          parent = proto
+          parent = proto,
+          call = Super.call,
+          apply = Super.apply
         ;
         if (proto) {
           sPO(Super, proto);
+          Super.call = call;
+          Super.apply = apply;
           do {
             ownKeys(parent).forEach(function (prop) {
               if (Super.hasOwnProperty(prop)) return;
@@ -124,6 +131,7 @@ var Class = (function (Object) {'use strict';
       Static[key] = gOPD(Statics, key);
       Static[key].enumerable = false;
     });
+    Class.prototype.constructor = Class;
     return defProps(Class, Static);
   };
 })(Object);

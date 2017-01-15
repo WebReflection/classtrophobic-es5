@@ -1,4 +1,4 @@
-# Classtrophobic ES5
+# Classtrophobic ES5 [![build status](https://secure.travis-ci.org/WebReflection/classtrophobic-es5.svg)](http://travis-ci.org/WebReflection/classtrophobic-es5)
 
 Project [Classtrophobic](https://github.com/WebReflection/classtrophobic) can work on older browsers too.
 
