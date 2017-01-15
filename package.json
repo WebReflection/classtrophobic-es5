@@ -1,0 +1,30 @@
+{
+  "name": "classtrophobic-es5",
+  "version": "0.1.1",
+  "description": "Classtrophobic for older browsers",
+  "main": "classtrophobic-es5.js",
+  "scripts": {
+    "test": "node test.js",
+    "size": "cat classtrophobic-es5.js | wc -c;cat classtrophobic-es5.min.js | wc -c;gzip -c classtrophobic-es5.min.js | wc -c",
+    "minify": "babili classtrophobic-es5.js -o classtrophobic-es5.min.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebReflection/classtrophobic-es5.git"
+  },
+  "keywords": [
+    "classtrophobic",
+    "es5",
+    "class"
+  ],
+  "author": "Andrea Giammarchi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WebReflection/classtrophobic-es5/issues"
+  },
+  "homepage": "https://github.com/WebReflection/classtrophobic-es5#readme",
+  "devDependencies": {
+    "babili": "0.0.9",
+    "consolemd": "^0.1.2"
+  }
+}
