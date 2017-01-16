@@ -4,9 +4,10 @@
   "description": "Classtrophobic for older browsers",
   "main": "classtrophobic-es5.js",
   "scripts": {
-    "test": "node test.js",
+    "test": "istanbul cover test.js",
     "size": "cat classtrophobic-es5.js | wc -c;cat classtrophobic-es5.min.js | wc -c;gzip -c classtrophobic-es5.min.js | wc -c",
-    "minify": "babili classtrophobic-es5.js -o classtrophobic-es5.min.js"
+    "minify": "babili classtrophobic-es5.js -o classtrophobic-es5.min.js",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,8 @@
   "homepage": "https://github.com/WebReflection/classtrophobic-es5#readme",
   "devDependencies": {
     "babili": "0.0.9",
-    "consolemd": "^0.1.2"
+    "consolemd": "^0.1.2",
+    "coveralls": "^2.11.15",
+    "istanbul": "^0.4.5"
   }
 }

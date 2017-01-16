@@ -1,4 +1,4 @@
-# Classtrophobic ES5 [![build status](https://secure.travis-ci.org/WebReflection/classtrophobic-es5.svg)](http://travis-ci.org/WebReflection/classtrophobic-es5)
+# Classtrophobic ES5 [![build status](https://secure.travis-ci.org/WebReflection/classtrophobic-es5.svg)](http://travis-ci.org/WebReflection/classtrophobic-es5) [![Coverage Status](https://coveralls.io/repos/github/WebReflection/classtrophobic-es5/badge.svg?branch=master)](https://coveralls.io/github/WebReflection/classtrophobic-es5?branch=master)
 
 Project [Classtrophobic](https://github.com/WebReflection/classtrophobic) can work on older browsers too.
 

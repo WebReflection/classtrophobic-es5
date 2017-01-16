@@ -1,5 +1,5 @@
+/*! (C) 2017 Andrea Giammarchi - MIT Style License */
 var Class = (function (Object) {'use strict';
-  /*! (C) 2017 Andrea Giammarchi - MIT Style License */
   var
     reserved = ['constructor', 'extends', 'static'],
     ObjectProto = Object.prototype,
