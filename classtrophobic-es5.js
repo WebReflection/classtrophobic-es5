@@ -103,7 +103,8 @@ var Class = (function (Object) {'use strict';
       Super = definition['extends'],
       Class = definition.hasOwnProperty('constructor') ?
         function () {
-          return Constructor.apply(this, arguments) || this;
+          var result = Constructor.apply(this, arguments);
+          return result ? sPO(result, Class.prototype) : this;
         } :
         (Super ?
           function () {
