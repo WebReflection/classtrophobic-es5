@@ -2,20 +2,33 @@
 var Class = (function (Object) {'use strict';
   var
     reserved = ['constructor', 'extends', 'static'],
+    isNative = function (fn) {
+      return /\[native code\]/.test(Object.toString.call(fn));
+    },
     ObjectProto = Object.prototype,
     gPO = Object.getPrototypeOf ||
           function (o) { return o.__proto__; },
     sPO = Object.setPrototypeOf ||
           function (o, p) { o.__proto__ = p; return o; },
     gOPD = Object.getOwnPropertyDescriptor,
-    ownKeys = Object.getOwnPropertySymbols ?
-          function ownKeys(o) {
-            return Object.getOwnPropertySymbols(o)
-                   .concat(Object.getOwnPropertyNames(o));
-          } :
-          Object.getOwnPropertyNames,
     defineProperty = Object.defineProperty,
     defProps = Object.defineProperties,
+    hasReflect = typeof Reflect === 'object',
+    construct = hasReflect &&
+          Reflect.construct ||
+          function (Super, args, Constructor) {
+            [].unshift.call(args, Super);
+            var C = Super.bind.apply(Super, args);
+            return sPO(new C, Constructor.prototype);
+          },
+    ownKeys = hasReflect &&
+          Reflect.ownKeys ||
+          (Object.getOwnPropertySymbols ?
+            function ownKeys(o) {
+              return Object.getOwnPropertySymbols(o)
+                     .concat(Object.getOwnPropertyNames(o));
+            } :
+            Object.getOwnPropertyNames),
     superPropertyDescriptor = {
       get: function () {
         var
@@ -28,8 +41,13 @@ var Class = (function (Object) {'use strict';
             sPO(self, parent);
             while ((parent.constructor === constructor)) parent = gPO(parent);
             self.constructor = constructor;
-            try { result = parent.constructor.apply(self, arguments); }
-            finally { sPO(self, proto); }
+            try {
+              result = isNative(parent.constructor) ?
+                construct(parent.constructor, arguments, constructor) :
+                parent.constructor.apply(self, arguments);
+            } finally {
+              sPO(self, proto);
+            }
             delete self.constructor;
             return result ? sPO(result, proto) : self;
           },
@@ -103,22 +121,22 @@ var Class = (function (Object) {'use strict';
       Super = definition['extends'],
       Class = definition.hasOwnProperty('constructor') ?
         function () {
-          var result = Constructor.apply(this, arguments);
-          return result ? sPO(result, Class.prototype) : this;
+          return Constructor.apply(this, arguments) || this;
         } :
         (Super ?
-          function () {
-            var result = Super.apply(this, arguments);
-            return result ? sPO(result, Class.prototype) : this;
-          } :
+          (isNative(Super) ?
+            function () {
+              return construct(Super, arguments, Class);
+            }   :
+            function () {
+              var result = Super.apply(this, arguments);
+              return result ? sPO(result, Class.prototype) : this;
+            }
+          ) :
           function () {}
         ),
-      Static = {
-        'super': superStaticDescriptor
-      },
-      Prototype = {
-        'super': superPropertyDescriptor
-      }
+      Static = {'super': superStaticDescriptor},
+      Prototype = {'super': superPropertyDescriptor}
     ;
     if (Super) {
       sPO(Class, Super);

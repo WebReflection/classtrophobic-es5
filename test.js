@@ -3,7 +3,7 @@ const Class = require('./classtrophobic-es5');
 let obj;
 
 console.log('# Classtrophobic Test');
-console.time('classtrophobic');
+console.time('classtrophobic-es5');
 
 console.log('BasicClass');
 const BasicClass = Class({});
@@ -260,6 +260,6 @@ console.assert(obj.splice(0, obj.length).join('-') === 'AS3-CS3-DS3');
 
 
 console.log('');
-console.timeEnd('classtrophobic');
+console.timeEnd('classtrophobic-es5');
 console.log('#green(*✔* OK)');
 console.log('');
