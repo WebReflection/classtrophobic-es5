@@ -1,6 +1,6 @@
 {
   "name": "classtrophobic-es5",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Classtrophobic for older browsers",
   "main": "classtrophobic-es5.js",
   "scripts": {
